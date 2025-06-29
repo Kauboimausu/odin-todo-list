@@ -2,10 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Slabo+27px:300,400,500,600,700&amp;lang=en" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ToDo Handler</title>
 </head>
 <body>
-    
+    <!-- Normal HTML elements -->
+    <div id="sidebar">
+        <h1 class="app-name">ToDo Handler</h1>
+        <div class="projects">
+            <h3 class="projects-header">Projects</h3>
+            <button class="projects-collapse">Toggle Projects</button>
+            <ul class="project-list">
+
+            </ul>
+            <button class="add-project-button">Add Project</button>
+        </div>
+        <h3 class="tasks">Tasks</h3>
+        <h3 class="about">About</h3>
+    </div>
+    <div id="content">
+        
+    </div>
+
+    <!-- Here go the dialog elements -->
+    <dialog class="create-project-dialog">
+        <form action="UIHandler.js" id="new-project-form">
+            <label for="name">Project Name:</label>
+            <input type="text" id="name" name="name" placeholder="Math Final Project" required>
+            <label for="type">Type:</label>
+            <input type="text" id="type" name="type" placeholder="School" required>
+            <label for="date">Due Date:</label>
+            <input type="date" id="date" name="date" required>
+            <button class="submit-project" type="submit">Create Project</button>
+        </form>
+    </dialog>
 </body>
 </html>
