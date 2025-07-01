@@ -1,5 +1,5 @@
-import { Project, projectList as projects} from "./project";
 import AuxHandler from "./AuxHandler.js";
+import DataHandler from "./DataHandler.js";
 
 const contentSection = document.getElementById("content");
 
@@ -124,7 +124,7 @@ const ProjectUIHandler = (function() {
     // Function that shows a project when it is clicked
     function showProjectInTab(projectID) {       
         // We need to get the project element we're gonna show
-        const project = projects.filter((project) => project.id == projectID)[0];
+        const project = DataHandler.returnProjectByID(projectID);
         projectName.textContent = project.name;
         projectDueDate.textContent = project.dueDate;
         projectRemainingTime.textContent = `Time Left: ${AuxHandler.getDistanceToNow(project.dueDate)}`;
@@ -142,27 +142,14 @@ const ProjectUIHandler = (function() {
     // Tt also brings the dialog box for creating new projects and handles their addition into the page 
     const addProjectButton = document.querySelector(".add-project-button");
     const projectFormWindow = document.querySelector(".create-project-dialog");
-    const newProjectForm = document.getElementById("new-project-form");
     const projectList = document.querySelector(".project-list");
     
     addProjectButton.addEventListener("click", () => {
         projectFormWindow.showModal();
     });
 
-    async function addNewProject(){
-        const newProjectData = new FormData(newProjectForm);
-        const projectID = AuxHandler.createID();
-        appendNewProjectToList(newProjectData.get("name"), projectID);
-        new Project(newProjectData.get("name"), newProjectData.get("type"), newProjectData.get("date"), projectID);
-    }
-
-    newProjectForm.addEventListener("submit", (e) => {
-        projectFormWindow.close();
-        addNewProject();
-        e.preventDefault();
-    });
-
     function appendNewProjectToList(projectName, id){
+        projectFormWindow.close();
         const newProject = document.createElement("li");
         newProject.id = id;
         newProject.textContent = projectName;
@@ -172,8 +159,9 @@ const ProjectUIHandler = (function() {
         });
     }
 
-})();
+    return {appendNewProjectToList, addNewProject};
 
+})();
 
 
 export {ProjectUIHandler};
