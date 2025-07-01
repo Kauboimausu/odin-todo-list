@@ -27,13 +27,13 @@
 
     <!-- Here go the dialog elements -->
     <dialog class="create-project-dialog">
-        <form action="UIHandler.js" id="new-project-form">
+        <form action="DataHandler.js" id="new-project-form">
             <label for="name">Project Name:</label>
             <input type="text" id="name" name="name" placeholder="Math Final Project" required>
             <label for="type">Type:</label>
             <input type="text" id="type" name="type" placeholder="School" required>
             <label for="date">Due Date:</label>
-            <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="date" min="{new Date()?.toISOString()?.slice(0, 10)}" required>
             <button class="submit-project" type="submit">Create Project</button>
         </form>
     </dialog>

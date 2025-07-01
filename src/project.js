@@ -10,6 +10,8 @@ class Project {
         projectList.push(this);
     }
 
+    
+
 }
 
 export {Project, projectList};
