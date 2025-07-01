@@ -159,9 +159,10 @@ const ProjectUIHandler = (function() {
         });
     }
 
-    return {appendNewProjectToList, addNewProject};
+    return {appendNewProjectToList};
 
 })();
 
 
 export {ProjectUIHandler};
+
