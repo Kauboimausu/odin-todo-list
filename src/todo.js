@@ -1,10 +1,13 @@
-class Todo {
-    constructor(name, dueDate, priority, checkList) {
+class ToDo {
+    constructor(name, dueDate, priority, notes, done = false) {
         this.name = name;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.checkList = checkList;
+        this.notes = notes;
+        this.done = false;
     }
 
     
 }
+
+export default ToDo;

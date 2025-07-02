@@ -10,7 +10,9 @@ class Project {
         projectList.push(this);
     }
 
-    
+    addNewTaskToList(newTask){
+        this.todos.push(newTask);
+    }
 
 }
 

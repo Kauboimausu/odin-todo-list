@@ -26,16 +26,50 @@
     </div>
 
     <!-- Here go the dialog elements -->
+
+    <!-- This first dialog will be for creating projects -->
     <dialog class="create-project-dialog">
         <form action="DataHandler.js" id="new-project-form">
-            <label for="name">Project Name:</label>
-            <input type="text" id="name" name="name" placeholder="Math Final Project" required>
-            <label for="type">Type:</label>
-            <input type="text" id="type" name="type" placeholder="School" required>
-            <label for="date">Due Date:</label>
-            <input type="date" id="date" name="date" min="{new Date()?.toISOString()?.slice(0, 10)}" required>
+            <div>
+                <label for="name">Project Name:</label>
+                <input type="text" id="name" name="name" placeholder="Math Final Project" required>
+            </div>
+            <div>
+                <label for="type">Type:</label>
+                <input type="text" id="type" name="type" placeholder="School" required>
+            </div>
+            <div>
+                <label for="date">Due Date:</label>
+                <input type="date" id="date" name="date" min="{new Date()?.toISOString()?.slice(0, 10)}" required>
+            </div>
             <button class="submit-project" type="submit">Create Project</button>
         </form>
     </dialog>
+
+    <!-- This dialogug will be for editing a project-->
+    <dialog class="edit-task-dialog">
+        <form action="" id="edit-task-form">
+            <div>
+                <label for="edited-task-name">New Name: </label>
+                <input type="text" id="ediited-task-name" name="edited-task-name">
+            </div>
+            <div>
+                <label for="edited-due-date">New Date: </label>
+                <input type="date" id="edited-due-date" name="edited-due-date">
+            </div>
+            <div>
+                <label for="edited-priority">New Priority: </label>
+                <input type="number" min="1" max="5" id="edited-priority" name="edited-priority">
+            </div>
+            <div>
+                <label for="edited-notes">New Notes: </label>
+                <input type="text" id="edited-notes" name="edited-notes">
+            </div>
+            <button class="submit-task-edits" type="submit">Submit Changes</button>
+        </form>
+
+    </dialog>
+
+
 </body>
 </html>

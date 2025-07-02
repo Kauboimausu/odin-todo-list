@@ -10,8 +10,11 @@ const ProjectUIHandler = (function() {
 
     // This is the element appended when a project is clicked so its info is shown
 
-    const projectsTab = document.createElement("div");
-    projectsTab.id = "projects-tab";
+    const projectTab = document.createElement("div");
+    projectTab.id = "project-tab";
+
+    const projectHeader = document.createElement("div");
+    projectHeader.classList.add("project-header");
 
     const projectName = document.createElement("h2");
     projectName.classList.add("project-name");
@@ -22,17 +25,24 @@ const ProjectUIHandler = (function() {
     const projectRemainingTime = document.createElement("p");
     projectRemainingTime.classList.add("project-remaining-time");
 
-    const projectToDoList = document.createElement("ul");
-    projectToDoList.classList.add("project-todo-list");
-
     const projectType = document.createElement("p");
     projectType.classList.add("project-type");
 
-    projectsTab.appendChild(projectName);
-    projectsTab.appendChild(projectDueDate);
-    projectsTab.appendChild(projectRemainingTime);
-    projectsTab.appendChild(projectType);
-    projectsTab.appendChild(projectToDoList);
+    const projectTaskSection = document.createElement("div");
+    projectTaskSection.classList.add("project-task-info");
+
+    const projectToDoList = document.createElement("ul");
+    projectToDoList.classList.add("project-todo-list");
+
+
+    projectTab.appendChild(projectHeader);
+    projectHeader.appendChild(projectName);
+    projectHeader.appendChild(projectDueDate);
+    projectHeader.appendChild(projectRemainingTime);
+    projectHeader.appendChild(projectType);
+
+    projectTab.appendChild(projectTaskSection);
+    projectTaskSection.appendChild(projectToDoList);
 
 
     // Function that creates a new form to create new tasks for the project
@@ -117,6 +127,13 @@ const ProjectUIHandler = (function() {
 
         // Finally we'll append the form to the top of the task list
         projectToDoList.appendChild(taskForm);
+
+        // We'll add the event listener here since this is when the element is created
+        taskForm.addEventListener("submit", (e) => {
+            DataHandler.addNewTaskToProject();
+            e.preventDefault();
+        });
+
     }
     
 
@@ -131,10 +148,17 @@ const ProjectUIHandler = (function() {
         projectType.textContent = project.type;
 
         contentSection.textContent = '';
-        contentSection.appendChild(projectsTab);
+        contentSection.appendChild(projectTab);
 
         projectToDoList.textContent = '';
         createNewTaskForm();
+        showExistingProjects(project.todos);
+    }
+
+    function showExistingProjects(taskList) {
+        for(let index = 0; index < taskList.length; index++) {
+            appendNewTaskToList(taskList[index]);
+        }
     }
 
 
@@ -159,7 +183,54 @@ const ProjectUIHandler = (function() {
         });
     }
 
-    return {appendNewProjectToList};
+
+
+
+    // This adds a task to the project task list
+    function appendNewTaskToList(task){
+        const newTask = document.createElement("li");
+        newTask.classList.add("project-task");
+        projectToDoList.appendChild(newTask);
+        
+        const taskTitle = document.createElement("h4");
+        taskTitle.textContent = task.name;
+        taskTitle.classList.add("task-title");
+
+        const taskDueDate = document.createElement("p");
+        taskDueDate.textContent = task.dueDate;
+        taskDueDate.classList.add("task-due-date");
+
+        const taskPriority = document.createElement("p");
+        taskPriority.classList.add("task-priority");
+        taskPriority.classList.add(`priority-${task.priority}`);
+        taskPriority.textContent = `Priority: ${task.priority}`;
+
+        const taskNotes = document.createElement("p");
+        taskNotes.textContent = task.notes;
+        taskNotes.classList.add("task-notes");
+
+        const taskFinished = document.createElement("p");
+        taskFinished.classList.add("task-done")
+        if(task.done) {
+            taskFinished.textContent = "Finished: Yes";
+            taskFinished.classList.add("completed");
+        } else {
+            taskFinished.textContent = "Finished: No";
+            taskFinished.classList.add("not-completed");
+        }
+
+        newTask.appendChild(taskTitle);
+        newTask.appendChild(taskDueDate);
+        newTask.appendChild(taskPriority);
+        newTask.appendChild(taskPriority);
+        newTask.appendChild(taskFinished);
+    }
+
+    // This will expand a task when clicked, it will also allow them to be edited
+
+
+
+    return {appendNewProjectToList, appendNewTaskToList};
 
 })();
 
