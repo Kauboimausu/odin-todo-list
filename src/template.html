@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Slabo+27px:300,400,500,600,700&amp;lang=en" />
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Aref+Ruqaa:300,400,500,600,700&amp;lang=en" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo Handler</title>
 </head>
 <body>
     <!-- Normal HTML elements -->
     <div id="sidebar">
-        <h1 class="app-name">ToDo Handler</h1>
+        <h1 id="app-name">ToDo Handler</h1>
         <div class="projects">
-            <h3 class="projects-header">Projects</h3>
-            <button class="projects-collapse">Toggle Projects</button>
+            <button class="collapse-button collapsable">Projects</button>
             <ul class="project-list">
 
+                <button class="add-project-button">Add Project</button>
             </ul>
-            <button class="add-project-button">Add Project</button>
         </div>
         <h3 class="tasks">Tasks</h3>
         <h3 class="about">About</h3>
@@ -26,6 +25,9 @@
     </div>
 
     <!-- Here go the dialog elements -->
+
+    <!-- This will darken the page when a dialog is brought up -->
+    <div class="page-mask"></div>
 
     <!-- This first dialog will be for creating projects -->
     <dialog class="create-project-dialog">

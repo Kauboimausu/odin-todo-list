@@ -1,14 +1,24 @@
 :root {
-    font-family: "Slabo 27px";
+    font-family: "Aref Ruqaa";
     --sidebar-background-color: rgb(0, 77, 77);
     --sidebar-text-color: rgb(204, 255, 245);
     --project-header-background-color: rgb(0, 128, 255);
     --project-header-color: rgb(242, 242, 242);
+    --dark-grey: rgb(64, 64, 64);
+    --light-grey: rgb(204, 204, 204);
+    --add-element-color: rgb(255, 184, 77);
+    --valid-color: rgb(51, 204, 255);
+    --invalid-color: rgb(255, 80, 80);
+    --priority-one: rgb(102, 255, 255);
+    --priority-two: rgb(255, 255, 153);
+    --priority-three: rgb(255, 204, 102);
+    --priority-four: rgb(255, 51, 0);
+    --priority-five: rgb(153, 0, 77);
 }
 
 body {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 5fr;
 }
 
 #sidebar {
@@ -24,19 +34,218 @@ body {
     gap: 20px;
 }
 
-#sidebar h1 {
+#sidebar > * {
+    font-size: 1rem;
+}
+
+#app-name {
     margin-bottom: 30px;
     font-size: 2rem;
 }
 
-#sidebar h3 {
+.tasks, .about {
     font-weight: 500;
     font-size: 1.2rem;
 }
 
+/* This will handle the collapsable button */
+
+.collapse-button {
+    border: 0;
+    width: 250px;
+    font-size: 1.35rem;
+}
+
+.project-list {
+    width: 250px;
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+    font-size: 1.1rem;
+}
+
+.project-item {
+    padding: 5px 10px;
+}
+
+.project-item:hover {
+    background-color: var(--dark-grey);
+    color: var(--light-grey);
+}
+
+.add-project-button {
+    width: 100%;
+    background-color: var(--add-element-color);
+    border: 0;
+}
+
+.collapsable {
+    background-color: var(--light-grey);
+    color: var(--dark-grey);
+}
+
+.collapsed {
+    background-color: var(--dark-grey);
+    color: var(--light-grey);
+}
+
+.collapsable:after {
+    content: '\02795';
+    color: white;
+    float: right;
+}
+
+.collapsed:after {
+    content: "\2796";
+    color: white;
+    float: right;
+}
+
+.no-show {
+    display: none;
+    overflow: hidden;
+}
+
+
+
 .project-header {
-    padding: 30px;
+    padding: 20px;
     background-color: var(--project-header-background-color);
     color: var(--project-header-color);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 60px);
+    align-items: center;
 }
+
+.project-header > * {
+    padding-left: 15px;
+    font-size: 1.2rem;
+}
+
+.project-name {
+    font-size: 2.25rem;
+    grid-column: 1/-1;
+}
+
+.project-todo-list {
+    padding: 50px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 250px;
+    grid-auto-rows: 200px;
+    grid-auto-flow: row;
+    column-gap: 20px;
+    row-gap: 50px;
+}
+
+#new-task-form {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    background-color: var(--add-element-color);
+    padding: 20px;
+    border-radius: 50px;
+    justify-items: center;
+    width: 80%;
+    justify-self: center;
+}
+
+.new-task-header {
+    grid-column: 1/-1;
+    padding: 5px 0;
+}
+
+#new-task-form input {
+    border-radius: 10px;
+}
+
+.new-task-submit-button {
+    border-radius: 10px;
+    width: 300px;
+    padding: 3px 20px;
+    grid-column: 1/-1;
+}
+
+.project-task {
+    border: 2px solid black;
+    border-radius: 25px;
+    padding: 10px 30px;
+}
+
+.task-title {
+    font-size: 1.2rem;
+}
+
+
+/* Dialog boxes */
+
+.page-mask {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+dialog {
+    position: fixed;
+    width: 500px;
+    height: 400px;
+    top: calc(50% - 200px);
+    left: calc(50% - 250px);
+}
+
+/* Priority colors for the tasks */
+
+.priority-one {
+    background-color: var(--priority-one);
+    color: var(--dark-grey);
+}
+
+.priority-two {
+    background-color: var(--priority-two);
+    color: var(--dark-grey);
+}
+
+.priority-three {
+    background-color: var(--priority-three);
+    color: black;
+}
+
+.priority-four {
+    background-color: var(--priority-four);
+    color: var(--light-grey);
+}
+
+.priority-five {
+    background-color: var(--priority-five);
+    color: var(--light-grey);
+}
+
+/* Responsive input boxes */
+
+input:valid {
+    border: 2px inset var(--valid-color);
+}
+
+input:invalid {
+    border: 2px inset var(--invalid-color);
+}
+
+
+input:placeholder-shown {
+    background-image: none;
+    border: 1px inset #cccccc;
+} 
+
+form:has(input:invalid) button {
+    background-color: var(--invalid-color);
+}
+
+
+
+
+
 

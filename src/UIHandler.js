@@ -90,11 +90,12 @@ const ProjectUIHandler = (function() {
         taskPriorityDiv.classList.add("task-priority-div");
         const taskPriorityLabel = document.createElement("label");
         taskPriorityLabel.for = "task-priority";
-        taskPriorityLabel.textContent = "Task Priority:";
+        taskPriorityLabel.textContent = "Task Priority: ";
         const taskPriorityInput = document.createElement("input");
         taskPriorityInput.type = "number";
         taskPriorityInput.min = 1;
         taskPriorityInput.max = 5;
+        taskPriorityInput.required = true;
         taskPriorityInput.id = "task-priority";
         taskPriorityInput.name = "task-priority"
         taskPriorityDiv.appendChild(taskPriorityLabel);
@@ -105,7 +106,7 @@ const ProjectUIHandler = (function() {
         taskNotesDiv.classList.add("task-notes-div");
         const taskNotesLabel = document.createElement("label");
         taskNotesLabel.for = "task-notes";
-        taskNotesLabel.textContent = "Task Notes";
+        taskNotesLabel.textContent = "Task Notes: ";
         const taskNotesInput = document.createElement("input");
         taskNotesInput.type = "textarea";
         taskNotesInput.id = "task-notes";
@@ -139,10 +140,10 @@ const ProjectUIHandler = (function() {
     function showProjectInTab(projectID) {       
         // We need to get the project element we're gonna show
         const project = DataHandler.returnProjectByID(projectID);
-        projectName.textContent = project.name;
-        projectDueDate.textContent = project.dueDate;
+        projectName.textContent = `Project: ${project.name}`;
+        projectDueDate.textContent = `Due: ${project.dueDate}`;
         projectRemainingTime.textContent = `Time Left: ${AuxHandler.getDistanceToNow(project.dueDate)}`;
-        projectType.textContent = project.type;
+        projectType.textContent = `Category: ${project.type}`;
 
         contentSection.textContent = '';
         contentSection.appendChild(projectTab);
@@ -173,8 +174,9 @@ const ProjectUIHandler = (function() {
         projectFormWindow.close();
         const newProject = document.createElement("li");
         newProject.id = id;
+        newProject.classList.add("project-item");
         newProject.textContent = projectName;
-        projectList.appendChild(newProject);
+        projectList.insertBefore(newProject, addProjectButton);
         newProject.addEventListener("click", () => {
             showProjectInTab(id);
         });
@@ -216,7 +218,7 @@ const ProjectUIHandler = (function() {
         taskTitle.classList.add("task-title");
 
         const taskDueDate = document.createElement("p");
-        taskDueDate.textContent = task.dueDate;
+        taskDueDate.textContent = `Due Date: ${task.dueDate}`;
         taskDueDate.classList.add("task-due-date");
 
         const taskPriority = document.createElement("p");
@@ -225,7 +227,7 @@ const ProjectUIHandler = (function() {
         taskPriority.textContent = `Priority: ${task.priority}`;
 
         const taskNotes = document.createElement("p");
-        taskNotes.textContent = task.notes;
+        taskNotes.textContent = `Notes: ${task.notes}`;
         taskNotes.classList.add("task-notes");
 
         const taskFinished = document.createElement("p");
@@ -244,6 +246,11 @@ const ProjectUIHandler = (function() {
         newTask.appendChild(taskPriority);
         newTask.appendChild(taskFinished);
 
+        // Before finishing we'll add the necessary class for the priority
+        const numbers = ["one", "two", "three", "four", "five"];
+        newTask.classList.add(`priority-${numbers[task.priority-1]}`);
+
+
         // Finally we'll add an event listener to bring up the expanded task when clicked
         newTask.addEventListener("click", (e) => {
             showExpandedTask(task);
@@ -258,6 +265,25 @@ const ProjectUIHandler = (function() {
 
 })();
 
+// Handles sidebar events
+const SideBarHandler = (function() {
+    const collapseButton = document.querySelector(".collapse-button");
+    const projectList = document.querySelector(".project-list");
+
+    collapseButton.addEventListener("click", (e) => {
+        // We'll make it so that the button toggles classes and list visibility
+        if(collapseButton.classList.contains("collapsable")) {
+            collapseButton.classList.remove("collapsable");
+            collapseButton.classList.add("collapsed");
+            projectList.classList.add("no-show");
+        } else {
+            collapseButton.classList.remove("collapsed");
+            collapseButton.classList.add("collapsable");
+            if(projectList.classList.contains("no-show"));
+                projectList.classList.remove("no-show");
+        }
+    });
+})();
 
 export {ProjectUIHandler};
 
