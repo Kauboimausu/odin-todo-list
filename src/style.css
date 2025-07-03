@@ -2,6 +2,8 @@
     font-family: "Slabo 27px";
     --sidebar-background-color: rgb(0, 77, 77);
     --sidebar-text-color: rgb(204, 255, 245);
+    --project-header-background-color: rgb(0, 128, 255);
+    --project-header-color: rgb(242, 242, 242);
 }
 
 body {
@@ -31,3 +33,10 @@ body {
     font-weight: 500;
     font-size: 1.2rem;
 }
+
+.project-header {
+    padding: 30px;
+    background-color: var(--project-header-background-color);
+    color: var(--project-header-color);
+}
+

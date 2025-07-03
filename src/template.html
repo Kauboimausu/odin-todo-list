@@ -40,10 +40,20 @@
             </div>
             <div>
                 <label for="date">Due Date:</label>
-                <input type="date" id="date" name="date" min="{new Date()?.toISOString()?.slice(0, 10)}" required>
+                <input type="date" id="date" name="date" required>
             </div>
             <button class="submit-project" type="submit">Create Project</button>
         </form>
+    </dialog>
+
+    <dialog class="dialog-task-view">
+        <div class="expanded-task-view">
+            <h4 class="expanded-task-name"></h4>
+            <p class="expanded-task-priority"></p>
+            <p class="expanded-task-due-date"></p>
+            <p class="expanded-task-notes"></p>
+            <p class="expanded-task-status"></p>
+        </div>
     </dialog>
 
     <!-- This dialogug will be for editing a project-->
@@ -51,7 +61,7 @@
         <form action="" id="edit-task-form">
             <div>
                 <label for="edited-task-name">New Name: </label>
-                <input type="text" id="ediited-task-name" name="edited-task-name">
+                <input type="text" id="edited-task-name" name="edited-task-name">
             </div>
             <div>
                 <label for="edited-due-date">New Date: </label>

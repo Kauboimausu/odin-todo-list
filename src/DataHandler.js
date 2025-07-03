@@ -17,6 +17,7 @@ const DataHandler = (function() {
         const projectID = AuxHandler.createID();
         ProjectUIHandler.appendNewProjectToList(newProjectData.get("name"), projectID);
         new Project(newProjectData.get("name"), newProjectData.get("type"), newProjectData.get("date"), projectID);
+        newProjectForm.reset();
     }
 
     newProjectForm.addEventListener("submit", (e) => {
@@ -31,10 +32,15 @@ const DataHandler = (function() {
         return project;
     }
 
+    function returnTaskByID(taskID) {
+        return project.todos.filter((todo) => todo.id == taskID)[0];
+    }
+
     async function addNewTaskToProject() {
         const newTaskForm = document.getElementById("new-task-form");
         const newTaskData = new FormData(newTaskForm);
-        const newTask = new ToDo(newTaskData.get("task-name"), newTaskData.get("task-due-date"), newTaskData.get("task-priority"), newTaskData.get("task-notes"));
+        const newTaskID = AuxHandler.createID();
+        const newTask = new ToDo(newTaskData.get("task-name"), newTaskData.get("task-due-date"), newTaskData.get("task-priority"), newTaskData.get("task-notes"), newTaskID);
         // We'll add the new task to the project, note that this notation appends it (refer to setter method)
         project.addNewTaskToList(newTask);
         ProjectUIHandler.appendNewTaskToList(newTask);

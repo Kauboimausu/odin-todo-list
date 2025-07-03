@@ -28,9 +28,6 @@ const ProjectUIHandler = (function() {
     const projectType = document.createElement("p");
     projectType.classList.add("project-type");
 
-    const projectTaskSection = document.createElement("div");
-    projectTaskSection.classList.add("project-task-info");
-
     const projectToDoList = document.createElement("ul");
     projectToDoList.classList.add("project-todo-list");
 
@@ -41,8 +38,7 @@ const ProjectUIHandler = (function() {
     projectHeader.appendChild(projectRemainingTime);
     projectHeader.appendChild(projectType);
 
-    projectTab.appendChild(projectTaskSection);
-    projectTaskSection.appendChild(projectToDoList);
+    projectTab.appendChild(projectToDoList);
 
 
     // Function that creates a new form to create new tasks for the project
@@ -132,6 +128,7 @@ const ProjectUIHandler = (function() {
         taskForm.addEventListener("submit", (e) => {
             DataHandler.addNewTaskToProject();
             e.preventDefault();
+            taskForm.reset();
         });
 
     }
@@ -183,14 +180,36 @@ const ProjectUIHandler = (function() {
         });
     }
 
+    function showExpandedTask(task) {
+        const modalView = document.querySelector(".dialog-task-view");
+        const expandedTaskView = document.querySelector(".expanded-task-view");
+        const expandedTaskName = document.querySelector(".expanded-task-name");
+        const expandedTaskPriority = document.querySelector(".expanded-task-priority");
+        const expandedTaskDueDate = document.querySelector(".expanded-task-due-date");
+        const expandedTaskNotes = document.querySelector(".expanded-task-notes");
+        const expandedTaskStatus = document.querySelector(".expanded-task-status");
 
+        expandedTaskView.id = task.taskID;
+        expandedTaskName.textContent = task.name;
+        expandedTaskPriority.textContent = task.priority;
+        expandedTaskDueDate.textContent = task.dueDate;
+        expandedTaskNotes.textContent = task.notes;
+        if(task.done) 
+            expandedTaskStatus.textContent = "Task Complete";
+        else 
+            expandedTaskStatus.textContent = "Tast Not Yet Finished";
+        modalView.showModal();
+    }
 
 
     // This adds a task to the project task list
-    function appendNewTaskToList(task){
+    function appendNewTaskToList(task) {
+
+
         const newTask = document.createElement("li");
         newTask.classList.add("project-task");
         projectToDoList.appendChild(newTask);
+        newTask.id = task.taskID;
         
         const taskTitle = document.createElement("h4");
         taskTitle.textContent = task.name;
@@ -224,6 +243,11 @@ const ProjectUIHandler = (function() {
         newTask.appendChild(taskPriority);
         newTask.appendChild(taskPriority);
         newTask.appendChild(taskFinished);
+
+        // Finally we'll add an event listener to bring up the expanded task when clicked
+        newTask.addEventListener("click", (e) => {
+            showExpandedTask(task);
+        });
     }
 
     // This will expand a task when clicked, it will also allow them to be edited

@@ -1,10 +1,10 @@
 class ToDo {
-    constructor(name, dueDate, priority, notes, done = false) {
+    constructor(name, dueDate, priority, notes, id) {
         this.name = name;
         this.dueDate = dueDate;
         this.priority = priority;
         this.notes = notes;
-        this.done = false;
+        this.taskID = id
     }
 
     

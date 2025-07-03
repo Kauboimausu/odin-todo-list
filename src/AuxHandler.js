@@ -16,8 +16,15 @@ function getTodaysDate() {
     const date = new Date();
 
     const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
+    let month = date.getMonth() + 1 + '';
+    // These ifs will add a 0 if the month or day is less than 10 to format it properly
+    if(month.length == 1) {
+        month = `0${month}`;
+    }
+    let day = date.getDate() + '';
+    if(day.length == 1) {
+        day = `0${day}`;
+    }
 
     return `${year}-${month}-${day}`;
 }
