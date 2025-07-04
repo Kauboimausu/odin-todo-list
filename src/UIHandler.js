@@ -127,6 +127,7 @@ const ProjectUIHandler = (function() {
 
         // We'll add the event listener here since this is when the element is created
         taskForm.addEventListener("submit", (e) => {
+            e.stopPropagation();
             DataHandler.addNewTaskToProject();
             e.preventDefault();
             taskForm.reset();
@@ -182,27 +183,6 @@ const ProjectUIHandler = (function() {
         });
     }
 
-    function showExpandedTask(task) {
-        const modalView = document.querySelector(".dialog-task-view");
-        const expandedTaskView = document.querySelector(".expanded-task-view");
-        const expandedTaskName = document.querySelector(".expanded-task-name");
-        const expandedTaskPriority = document.querySelector(".expanded-task-priority");
-        const expandedTaskDueDate = document.querySelector(".expanded-task-due-date");
-        const expandedTaskNotes = document.querySelector(".expanded-task-notes");
-        const expandedTaskStatus = document.querySelector(".expanded-task-status");
-
-        expandedTaskView.id = task.taskID;
-        expandedTaskName.textContent = task.name;
-        expandedTaskPriority.textContent = task.priority;
-        expandedTaskDueDate.textContent = task.dueDate;
-        expandedTaskNotes.textContent = task.notes;
-        if(task.done) 
-            expandedTaskStatus.textContent = "Task Complete";
-        else 
-            expandedTaskStatus.textContent = "Tast Not Yet Finished";
-        modalView.showModal();
-    }
-
 
     // This adds a task to the project task list
     function appendNewTaskToList(task) {
@@ -253,7 +233,7 @@ const ProjectUIHandler = (function() {
 
         // Finally we'll add an event listener to bring up the expanded task when clicked
         newTask.addEventListener("click", (e) => {
-            showExpandedTask(task);
+            DialogHandler.showExpandedTask(task);
         });
     }
 
@@ -283,6 +263,75 @@ const SideBarHandler = (function() {
                 projectList.classList.remove("no-show");
         }
     });
+})();
+
+
+// Handles dialog events 
+const DialogHandler = (function() {
+
+    const dialogs = document.querySelectorAll("dialog");
+    const pageMask = document.querySelector(".page-mask");
+
+    function togglePageMask(toggleOn) {
+        if(toggleOn) {
+            pageMask.style.display = "block";
+        } else{
+            pageMask.style.display = "none";
+        }
+    }
+
+    for(let i = 0; i < dialogs.length; i++) {
+        dialogs[i].addEventListener("beforetoggle", (e) => {
+            if(e.newState == "open")
+                togglePageMask(true);
+            else 
+                togglePageMask(false);
+        })
+    }
+
+    const closeProjectDialog = document.querySelector(".close-create-project");
+
+    closeProjectDialog.addEventListener("click", (e) => {
+        document.querySelector(".create-project-dialog").close();
+    });
+
+
+    function showExpandedTask(task) {
+        const modalView = document.querySelector(".dialog-task-view");
+        const expandedTaskView = document.querySelector(".expanded-task-view");
+        const expandedTaskName = document.querySelector(".expanded-task-name");
+        const expandedTaskPriority = document.querySelector(".expanded-task-priority");
+        const expandedTaskDueDate = document.querySelector(".expanded-task-due-date");
+        const expandedTaskNotes = document.querySelector(".expanded-task-notes");
+        const expandedTaskStatus = document.querySelector(".expanded-task-status");
+
+        expandedTaskView.id = task.taskID;
+        expandedTaskName.textContent = task.name;
+        expandedTaskPriority.textContent = `Priority: ${task.priority}`;
+        expandedTaskDueDate.textContent = `Due Date: ${task.dueDate}`;
+        expandedTaskNotes.textContent = `Notes:\n ${task.notes}`;
+        if(task.done) 
+            expandedTaskStatus.textContent = "Task Complete";
+        else 
+            expandedTaskStatus.textContent = "Task Not Yet Finished";
+        modalView.showModal();
+    }
+
+    
+    const closeTaskDialog = document.querySelector(".close-task-view");
+
+    closeTaskDialog.addEventListener("click", (e) => {
+        document.querySelector(".dialog-task-view").close();
+    });
+
+
+    const closeEditDialog = document.querySelector(".close-edit-dialog");
+
+    closeEditDialog.addEventListener("click", (e) => {
+        document.querySelector("eid-task-dialog").close();
+    });
+
+    return { showExpandedTask };
 })();
 
 export {ProjectUIHandler};

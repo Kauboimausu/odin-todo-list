@@ -187,6 +187,7 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
+  display: none;
 }
 
 dialog {
@@ -195,6 +196,33 @@ dialog {
     height: 400px;
     top: calc(50% - 200px);
     left: calc(50% - 250px);
+}
+
+.close-dialog {
+    float: right;
+    background-color: var(--invalid-color);
+    /* border-radius: 50px; */
+    background-image: url("./img/remove.png");
+    background-size: contain;
+    height: 35px;
+    width: 35px;
+    border-radius: 35px;
+    border: none;
+}
+
+dialog > form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    font-size: 1.1rem;
+}
+
+dialog > form > button[type="submit"] {
+    align-self: center;
+    border-radius: 20px;
+    padding: 10px 25px;
+    border: none;
 }
 
 /* Priority colors for the tasks */
@@ -240,9 +268,11 @@ input:placeholder-shown {
     border: 1px inset #cccccc;
 } 
 
-form:has(input:invalid) button {
+form:has(input:invalid) button[type="submit"] {
     background-color: var(--invalid-color);
 }
+
+
 
 
 

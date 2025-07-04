@@ -31,6 +31,7 @@
 
     <!-- This first dialog will be for creating projects -->
     <dialog class="create-project-dialog">
+        <button class="close-create-project close-dialog"></button>
         <form action="DataHandler.js" id="new-project-form">
             <div>
                 <label for="name">Project Name:</label>
@@ -49,6 +50,7 @@
     </dialog>
 
     <dialog class="dialog-task-view">
+        <button class="close-task-view close-dialog"></button>
         <div class="expanded-task-view">
             <h4 class="expanded-task-name"></h4>
             <p class="expanded-task-priority"></p>
@@ -60,6 +62,7 @@
 
     <!-- This dialogug will be for editing a project-->
     <dialog class="edit-task-dialog">
+        <button class="close-edit-dialog close-dialog">X</button>
         <form action="" id="edit-task-form">
             <div>
                 <label for="edited-task-name">New Name: </label>
