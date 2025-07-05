@@ -5,6 +5,7 @@ class ToDo {
         this.priority = priority;
         this.notes = notes;
         this.taskID = id
+        this.completed = false;
     }
 
     

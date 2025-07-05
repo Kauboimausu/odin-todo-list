@@ -32,8 +32,8 @@ const DataHandler = (function() {
         return project;
     }
 
-    function returnTaskByID(taskID) {
-        return project.todos.filter((todo) => todo.id == taskID)[0];
+    function findTaskByID(taskID) {
+        return project.todos.filter((todo) => todo.taskID == taskID)[0];
     }
 
     async function addNewTaskToProject() {
@@ -46,9 +46,23 @@ const DataHandler = (function() {
         ProjectUIHandler.appendNewTaskToList(newTask);
     }
 
-    
+    function updateTaskInfo(task, form) {
+        task.name = form.get("edited-task-name");
+        task.dueDate = form.get("edited-due-date");
+        task.priority = form.get("edited-priority");
+        task.notes = form.get("edited-notees");
+    }
 
-    return { returnProjectByID, addNewTaskToProject };
+    async function editExistingTask() {
+        const editTaskForm = document.getElementById("edit-task-form");
+        const updatedTaskData = new FormData(editTaskForm);
+        const taskID = document.querySelector(".edit-task-dialog").id;
+        const taskToUpdate = findTaskByID(taskID);
+        updateTaskInfo(taskToUpdate, updatedTaskData);
+        // ProjectUIHandler.editDisplayedTask(taskToUpdate);
+    }
+
+    return { returnProjectByID, addNewTaskToProject, findTaskByID, editExistingTask };
 
 })();
 

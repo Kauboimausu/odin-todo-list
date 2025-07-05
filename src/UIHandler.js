@@ -1,5 +1,7 @@
 import AuxHandler from "./AuxHandler.js";
 import DataHandler from "./DataHandler.js";
+import trash from "./img/papelera.png";
+import edit from "./img/editar.png";
 
 const contentSection = document.getElementById("content");
 
@@ -209,35 +211,89 @@ const ProjectUIHandler = (function() {
         const taskNotes = document.createElement("p");
         taskNotes.textContent = `Notes: ${task.notes}`;
         taskNotes.classList.add("task-notes");
+         
+        const statusDiv = document.createElement("div");
+        statusDiv.classList.add("status-div");
+        const statusText = document.createElement("p");
+        statusText.textContent = "Finished "
+        const editStatus = document.createElement("input");
+        editStatus.type = "checkbox";
+        editStatus.checked = task.completed;
 
-        const taskFinished = document.createElement("p");
-        taskFinished.classList.add("task-done")
-        if(task.done) {
-            taskFinished.textContent = "Finished: Yes";
-            taskFinished.classList.add("completed");
-        } else {
-            taskFinished.textContent = "Finished: No";
-            taskFinished.classList.add("not-completed");
-        }
+        statusDiv.appendChild(statusText);
+        statusDiv.appendChild(editStatus);
+
+        editStatus.classList.add("edit-task-status");
+        editStatus.classList.add("task-done");
+        editStatus.classList.add("unfinished");
 
         newTask.appendChild(taskTitle);
         newTask.appendChild(taskDueDate);
         newTask.appendChild(taskPriority);
         newTask.appendChild(taskPriority);
-        newTask.appendChild(taskFinished);
+        newTask.appendChild(statusDiv);
 
-        // Before finishing we'll add the necessary class for the priority
+        const actionsDiv = document.createElement("div");
+        actionsDiv.classList.add("task-actions");
+        const editIcon = document.createElement("img");
+        editIcon.src = edit;
+        editIcon.classList.add("edit-task");
+        editIcon.classList.add("task-icons");
+        const trashIcon = document.createElement("img");
+        trashIcon.src = trash;
+        trashIcon.classList.add("delete-task");
+        trashIcon.classList.add("task-icons");
+
+        actionsDiv.appendChild(editIcon);
+        actionsDiv.appendChild(trashIcon);
+
+        newTask.appendChild(actionsDiv);
+
+
+        //  we'll add the necessary class for the priority
         const numbers = ["one", "two", "three", "four", "five"];
         newTask.classList.add(`priority-${numbers[task.priority-1]}`);
 
+        // Event that edits a task
+        editIcon.addEventListener("click", (e) => {
+            e.stopPropagation();
+            DialogHandler.showEditTask(task);
+        }); 
 
-        // Finally we'll add an event listener to bring up the expanded task when clicked
+        // Event that deletes a task
+        trashIcon.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+
+
+        // We'll add an event listener to change the task status when clicked 
+        editStatus.addEventListener("click", (e) => {
+            e.stopPropagation();
+            // We'll toggle the task completion status, as well as change the checkbox class
+            task.completed = !task.completed;
+            if(task.completed) {
+                editStatus.classList.add("task-completed");
+                editStatus.classList.add("task-incomplete");
+            } else {
+                editStatus.classList.add("task-incomplete");
+                editStatus.classList.add("task-completed");
+            }
+        });
+
+
+        // we'll add an event listener to bring up the expanded task when clicked
         newTask.addEventListener("click", (e) => {
             DialogHandler.showExpandedTask(task);
         });
     }
 
-    // This will expand a task when clicked, it will also allow them to be edited
+    // function editDisplayedTask(task){
+    //     const taskToUpdate = document.querySelector(`${task.taskID}`);
+    //     taskToUpdate.title = task.name;
+    //     document.querySelector(`#${task.taskID}>task-title`) = task.name;
+    //     document.querySelector(`#${task.taskID}>task-due-date`) = `Due Date: ${task.dueDate}`;
+    //     document.querySelector(`#${task.taskID}>task-priority`) = `Priority: ${task.priority}`;
+    // }
 
 
 
@@ -298,24 +354,50 @@ const DialogHandler = (function() {
 
     function showExpandedTask(task) {
         const modalView = document.querySelector(".dialog-task-view");
-        const expandedTaskView = document.querySelector(".expanded-task-view");
+        // const expandedTaskView = document.querySelector(".expanded-task-view");
         const expandedTaskName = document.querySelector(".expanded-task-name");
         const expandedTaskPriority = document.querySelector(".expanded-task-priority");
         const expandedTaskDueDate = document.querySelector(".expanded-task-due-date");
+        const expandedTaskTimeLeft = document.querySelector(".expanded-task-time-left");
         const expandedTaskNotes = document.querySelector(".expanded-task-notes");
         const expandedTaskStatus = document.querySelector(".expanded-task-status");
 
-        expandedTaskView.id = task.taskID;
+        // expandedTaskView.id = task.taskID;
         expandedTaskName.textContent = task.name;
         expandedTaskPriority.textContent = `Priority: ${task.priority}`;
         expandedTaskDueDate.textContent = `Due Date: ${task.dueDate}`;
-        expandedTaskNotes.textContent = `Notes:\n ${task.notes}`;
-        if(task.done) 
+        expandedTaskTimeLeft.textContent = `Time Left: ${AuxHandler.getDistanceToNow(task.dueDate)}`;
+        expandedTaskNotes.textContent = `Notes: \n ${task.notes}`;
+        if(task.completed) 
             expandedTaskStatus.textContent = "Task Complete";
         else 
             expandedTaskStatus.textContent = "Task Not Yet Finished";
         modalView.showModal();
     }
+
+    function showEditTask(task) {
+        const modalView = document.querySelector(".edit-task-dialog");
+        modalView.id = task.taskID;
+
+        const editTaskName = document.getElementById("edited-task-name");
+        editTaskName.value = task.name;
+        const editDueDate = document.getElementById("edited-due-date");
+        editDueDate.value = task.dueDate;
+        editDueDate.min = AuxHandler.getTodaysDate();
+        const editPriority = document.getElementById("edited-priority");
+        editPriority.value = task.priority;
+        const editNotes = document.getElementById("edited-notes");
+        editNotes.value = task.notes;
+
+        modalView.showModal();
+    }
+
+    const editTaskForm = document.getElementById("edit-task-form");
+        editTaskForm.addEventListener("submit", (e) => {
+            DataHandler.editExistingTask();
+            e.preventDefault();
+    });
+
 
     
     const closeTaskDialog = document.querySelector(".close-task-view");
@@ -328,10 +410,10 @@ const DialogHandler = (function() {
     const closeEditDialog = document.querySelector(".close-edit-dialog");
 
     closeEditDialog.addEventListener("click", (e) => {
-        document.querySelector("eid-task-dialog").close();
+        document.querySelector(".edit-task-dialog").close();
     });
 
-    return { showExpandedTask };
+    return { showExpandedTask, showEditTask };
 })();
 
 export {ProjectUIHandler};
