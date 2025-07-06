@@ -156,6 +156,7 @@ const ProjectUIHandler = (function() {
         showExistingProjects(project.todos);
     }
 
+    // When a project is displayed it ensures its existing tasks are displayed
     function showExistingProjects(taskList) {
         for(let index = 0; index < taskList.length; index++) {
             appendNewTaskToList(taskList[index]);
@@ -173,6 +174,7 @@ const ProjectUIHandler = (function() {
         projectFormWindow.showModal();
     });
 
+    // Adds a new project to the project list when created
     function appendNewProjectToList(projectName, id){
         projectFormWindow.close();
         const newProject = document.createElement("li");
@@ -188,7 +190,6 @@ const ProjectUIHandler = (function() {
 
     // This adds a task to the project task list
     function appendNewTaskToList(task) {
-
 
         const newTask = document.createElement("li");
         newTask.classList.add("project-task");
@@ -237,10 +238,12 @@ const ProjectUIHandler = (function() {
         actionsDiv.classList.add("task-actions");
         const editIcon = document.createElement("img");
         editIcon.src = edit;
+        editIcon.alt = "Edit Icon";
         editIcon.classList.add("edit-task");
         editIcon.classList.add("task-icons");
         const trashIcon = document.createElement("img");
         trashIcon.src = trash;
+        trashIcon.alt = "Remove Icon";
         trashIcon.classList.add("delete-task");
         trashIcon.classList.add("task-icons");
 
@@ -263,6 +266,8 @@ const ProjectUIHandler = (function() {
         // Event that deletes a task
         trashIcon.addEventListener("click", (e) => {
             e.stopPropagation();
+            DataHandler.deleteExistingTask(task.taskID);
+            newTask.remove();
         })
 
 
@@ -287,17 +292,23 @@ const ProjectUIHandler = (function() {
         });
     }
 
-    // function editDisplayedTask(task){
-    //     const taskToUpdate = document.querySelector(`${task.taskID}`);
-    //     taskToUpdate.title = task.name;
-    //     document.querySelector(`#${task.taskID}>task-title`) = task.name;
-    //     document.querySelector(`#${task.taskID}>task-due-date`) = `Due Date: ${task.dueDate}`;
-    //     document.querySelector(`#${task.taskID}>task-priority`) = `Priority: ${task.priority}`;
-    // }
+    // When a task is edited it updates its UI
+    function editDisplayedTask(task){
+        const dialogToUpdate = document.getElementById(task.taskID);
+        dialogToUpdate.className = "";
+        dialogToUpdate.classList.add("project-task");
+        const numbers = ["one", "two", "three", "four", "five"];
+        dialogToUpdate.classList.add(`priority-${numbers[task.priority-1]}`);
+
+        const fieldsToUpdate = document.getElementById(task.taskID).children;
+        fieldsToUpdate[0].textContent = `${task.name}`;
+        fieldsToUpdate[1].textContent = `Due Date: ${task.dueDate}`;
+        fieldsToUpdate[2].textContent = `Priority: ${task.priority}`;
+        DialogHandler.closeDialogElement(document.querySelector(".edit-task-dialog"));
+    }
 
 
-
-    return {appendNewProjectToList, appendNewTaskToList};
+    return {appendNewProjectToList, appendNewTaskToList, editDisplayedTask};
 
 })();
 
@@ -328,6 +339,8 @@ const DialogHandler = (function() {
     const dialogs = document.querySelectorAll("dialog");
     const pageMask = document.querySelector(".page-mask");
 
+    // Brings up a background mask when a dialog is brought up to ensure higher contrast
+
     function togglePageMask(toggleOn) {
         if(toggleOn) {
             pageMask.style.display = "block";
@@ -345,16 +358,11 @@ const DialogHandler = (function() {
         })
     }
 
-    const closeProjectDialog = document.querySelector(".close-create-project");
-
-    closeProjectDialog.addEventListener("click", (e) => {
-        document.querySelector(".create-project-dialog").close();
-    });
-
+    // Brings up the expanded task view with the corresponding task info
 
     function showExpandedTask(task) {
         const modalView = document.querySelector(".dialog-task-view");
-        // const expandedTaskView = document.querySelector(".expanded-task-view");
+        const expandedTaskView = document.querySelector(".expanded-task-view");
         const expandedTaskName = document.querySelector(".expanded-task-name");
         const expandedTaskPriority = document.querySelector(".expanded-task-priority");
         const expandedTaskDueDate = document.querySelector(".expanded-task-due-date");
@@ -362,7 +370,7 @@ const DialogHandler = (function() {
         const expandedTaskNotes = document.querySelector(".expanded-task-notes");
         const expandedTaskStatus = document.querySelector(".expanded-task-status");
 
-        // expandedTaskView.id = task.taskID;
+        expandedTaskView.id = task.taskID;
         expandedTaskName.textContent = task.name;
         expandedTaskPriority.textContent = `Priority: ${task.priority}`;
         expandedTaskDueDate.textContent = `Due Date: ${task.dueDate}`;
@@ -374,6 +382,25 @@ const DialogHandler = (function() {
             expandedTaskStatus.textContent = "Task Not Yet Finished";
         modalView.showModal();
     }
+
+    // Event listeners for expanded task window
+    const editIcon = document.querySelector(".expanded-edit-icon");
+    editIcon.addEventListener("click", (e) => {
+        closeDialogElement(document.querySelector(".dialog-task-view"));
+        showEditTask(DataHandler.findTaskByID(document.querySelector(".expanded-task-view").id));
+    });
+
+    const removeIcon = document.querySelector(".expanded-remove-icon");
+    removeIcon.addEventListener("click", (e) => {
+        closeDialogElement(document.querySelector(".dialog-task-view"));
+        const elementID = document.querySelector(".expanded-task-view").id;
+        DataHandler.deleteExistingTask(elementID);
+        document.querySelector(".expanded-task-view").id = '';
+        document.getElementById(elementID).remove();
+    })
+
+
+    // Brings up the edit task window 
 
     function showEditTask(task) {
         const modalView = document.querySelector(".edit-task-dialog");
@@ -392,12 +419,21 @@ const DialogHandler = (function() {
         modalView.showModal();
     }
 
+
     const editTaskForm = document.getElementById("edit-task-form");
         editTaskForm.addEventListener("submit", (e) => {
             DataHandler.editExistingTask();
             e.preventDefault();
     });
 
+
+    // These bind the close buttons to each window, ensuring they close when clicked
+
+    const closeProjectDialog = document.querySelector(".close-create-project");
+
+    closeProjectDialog.addEventListener("click", (e) => {
+        document.querySelector(".create-project-dialog").close();
+    });
 
     
     const closeTaskDialog = document.querySelector(".close-task-view");
@@ -407,13 +443,25 @@ const DialogHandler = (function() {
     });
 
 
+    
     const closeEditDialog = document.querySelector(".close-edit-dialog");
 
     closeEditDialog.addEventListener("click", (e) => {
         document.querySelector(".edit-task-dialog").close();
     });
 
-    return { showExpandedTask, showEditTask };
+    
+    // We'll set date verification when creating a new project (a project can't be due in the past)
+    const projectDueDate = document.getElementById("date");
+    projectDueDate.min = AuxHandler.getTodaysDate();
+    
+
+    // closes a modal element
+    function closeDialogElement(modalToClose) {
+        modalToClose.close();
+    }
+
+    return { showExpandedTask, showEditTask, closeDialogElement };
 })();
 
 export {ProjectUIHandler};

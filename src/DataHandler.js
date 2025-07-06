@@ -59,10 +59,15 @@ const DataHandler = (function() {
         const taskID = document.querySelector(".edit-task-dialog").id;
         const taskToUpdate = findTaskByID(taskID);
         updateTaskInfo(taskToUpdate, updatedTaskData);
-        // ProjectUIHandler.editDisplayedTask(taskToUpdate);
+        ProjectUIHandler.editDisplayedTask(taskToUpdate);
     }
 
-    return { returnProjectByID, addNewTaskToProject, findTaskByID, editExistingTask };
+    // This deletes a task with the given ID from the project
+    async function deleteExistingTask(id) {
+        project.todos = project.todos.filter(todo => todo.taskID != id);
+    }
+
+    return { returnProjectByID, addNewTaskToProject, findTaskByID, editExistingTask, deleteExistingTask };
 
 })();
 
