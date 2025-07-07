@@ -1,6 +1,7 @@
 import "./reset.css";
 import "./style.css";
 import { ProjectUIHandler } from "./UIHandler";
+import { Project } from "./project";
 
 const TabManager = (function() {
     const homeButton = document.querySelector(".app-name");

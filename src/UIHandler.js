@@ -113,6 +113,8 @@ const ProjectUIHandler = (function() {
         taskNotesInput.type = "textarea";
         taskNotesInput.id = "task-notes";
         taskNotesInput.name = "task-notes";
+        taskNotesInput.cols = 10;
+        taskNotesInput.rows = 2;
         taskNotesInput.placeholder = "Sweep under the couch";
         taskNotesDiv.appendChild(taskNotesLabel);
         taskNotesDiv.appendChild(taskNotesInput);
@@ -307,8 +309,16 @@ const ProjectUIHandler = (function() {
         DialogHandler.closeDialogElement(document.querySelector(".edit-task-dialog"));
     }
 
+    // Adds existing loaded projects to UI
+    // function addLoadedProjectsToList(projects){
+    //     for(let index = 0; index < projects.length; i++) {
+    //         ProjectUIHandler.appendNewProjectToList(projects[index].name, projects[index].id);
+    //     }
+    // }
 
-    return {appendNewProjectToList, appendNewTaskToList, editDisplayedTask};
+    // addLoadedProjectsToList(DataHandler.returnProjectList());
+
+    return {appendNewProjectToList, appendNewTaskToList, editDisplayedTask };
 
 })();
 
@@ -375,7 +385,10 @@ const DialogHandler = (function() {
         expandedTaskPriority.textContent = `Priority: ${task.priority}`;
         expandedTaskDueDate.textContent = `Due Date: ${task.dueDate}`;
         expandedTaskTimeLeft.textContent = `Time Left: ${AuxHandler.getDistanceToNow(task.dueDate)}`;
-        expandedTaskNotes.textContent = `Notes: \n ${task.notes}`;
+        if(task.notes != '')
+            expandedTaskNotes.textContent = `Notes: \n ${task.notes}`;
+        else
+            expandedTaskNotes.textContent = "This task doesn't have notes";
         if(task.completed) 
             expandedTaskStatus.textContent = "Task Complete";
         else 
