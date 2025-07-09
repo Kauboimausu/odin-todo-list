@@ -1,11 +1,6 @@
 import "./reset.css";
 import "./style.css";
 import { ProjectUIHandler } from "./UIHandler";
-import { Project } from "./project";
+import { projectList } from "./project";
 
-const TabManager = (function() {
-    const homeButton = document.querySelector(".app-name");
-    
-    const tasks = document.querySelector(".tasks");
-    const about = document.querySelector(".about");
-})();
+ProjectUIHandler.rebuildProjects(projectList);

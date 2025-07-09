@@ -324,7 +324,13 @@ const ProjectUIHandler = (function() {
         e.preventDefault();
     });
 
-    return {appendNewProjectToList, appendNewTaskToList, editDisplayedTask };
+    function rebuildProjects(projectList) {
+        for(let index = 0; index < projectList.length; index++) {
+            appendNewProjectToList(projectList[index].name, projectList[index].id);
+        }
+    }
+
+    return {appendNewProjectToList, appendNewTaskToList, editDisplayedTask, rebuildProjects };
 
 })();
 
