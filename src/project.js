@@ -23,7 +23,6 @@ let projectList = [];
 for(let index = 0; index < projectData.length; index++) {
     let reconstructedProject = new Project(projectData[index].name, projectData[index].type, projectData[index].dueDate, projectData[index].id, projectData[index].todos);
     projectList.push(reconstructedProject);
-    // DataHandler.reconstructProjectList();
 }
 
 export {Project, projectList};

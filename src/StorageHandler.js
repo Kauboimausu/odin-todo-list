@@ -1,6 +1,3 @@
-
-
-
 // Function that saves and loads data
 const StorageHandler = (function() {
     function saveProjects(projectList){

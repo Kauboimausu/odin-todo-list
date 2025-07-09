@@ -132,9 +132,11 @@ const ProjectUIHandler = (function() {
         // We'll add the event listener here since this is when the element is created
         taskForm.addEventListener("submit", (e) => {
             e.stopPropagation();
-            DataHandler.addNewTaskToProject();
+            const newTaskPromise = DataHandler.addNewTaskToProject();
+            newTaskPromise.then(newTask => appendNewTaskToList(newTask));
             e.preventDefault();
             taskForm.reset();
+            // appendNewTaskToList(newTask);
         });
 
     }
@@ -309,14 +311,18 @@ const ProjectUIHandler = (function() {
         DialogHandler.closeDialogElement(document.querySelector(".edit-task-dialog"));
     }
 
-    // Adds existing loaded projects to UI
-    // function addLoadedProjectsToList(projects){
-    //     for(let index = 0; index < projects.length; i++) {
-    //         ProjectUIHandler.appendNewProjectToList(projects[index].name, projects[index].id);
-    //     }
-    // }
+    // Here will be the listeners for the form submissions
 
-    // addLoadedProjectsToList(DataHandler.returnProjectList());
+    const newProjectForm = document.getElementById("new-project-form");
+
+    newProjectForm.addEventListener("submit", (e) => {
+        const newProjectData = new FormData(newProjectForm);
+        const projectID = AuxHandler.createID();
+        appendNewProjectToList(newProjectData.get("name"), projectID);
+        DataHandler.addNewProject(newProjectData.get("name"), newProjectData.get("type"), newProjectData.get("date"), projectID);
+        newProjectForm.reset();
+        e.preventDefault();
+    });
 
     return {appendNewProjectToList, appendNewTaskToList, editDisplayedTask };
 
@@ -434,9 +440,13 @@ const DialogHandler = (function() {
 
 
     const editTaskForm = document.getElementById("edit-task-form");
-        editTaskForm.addEventListener("submit", (e) => {
-            DataHandler.editExistingTask();
-            e.preventDefault();
+    editTaskForm.addEventListener("submit", (e) => {
+        const updatedTaskData = new FormData(editTaskForm);
+        const taskID = document.querySelector(".edit-task-dialog").id;
+        const taskToUpdate = DataHandler.findTaskByID(taskID);
+        DataHandler.updateTaskInfo(taskToUpdate, updatedTaskData);
+        ProjectUIHandler.editDisplayedTask(DataHandler.findTaskByID(taskID));
+        e.preventDefault();
     });
 
 

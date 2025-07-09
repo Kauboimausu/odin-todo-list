@@ -8,7 +8,6 @@ import ToDo from "./todo.js";
 
 const DataHandler = (function() {
 
-    const newProjectForm = document.getElementById("new-project-form");
     // This will be the project that is currently being displayed
     let project;
 
@@ -18,20 +17,10 @@ const DataHandler = (function() {
     }
     
     // Adds a new project to the project list after it's created
-    async function addNewProject() {
-        const newProjectData = new FormData(newProjectForm);
-        const projectID = AuxHandler.createID();
-        ProjectUIHandler.appendNewProjectToList(newProjectData.get("name"), projectID);
-        new Project(newProjectData.get("name"), newProjectData.get("type"), newProjectData.get("date"), projectID);
-        newProjectForm.reset();
+    async function addNewProject(name, type, date, id) {        
+        new Project(name, type, date, id);
         saveUserData();
     }
-
-    // Handles form submission to create a new project
-    newProjectForm.addEventListener("submit", (e) => {
-        addNewProject();
-        e.preventDefault();
-    });
 
     // Returns a project by its ID
     function returnProjectByID(projectID) {
@@ -53,8 +42,8 @@ const DataHandler = (function() {
         const newTask = new ToDo(newTaskData.get("task-name"), newTaskData.get("task-due-date"), newTaskData.get("task-priority"), newTaskData.get("task-notes"), newTaskID);
         // We'll add the new task to the project, note that this notation appends it (refer to setter method)
         project.addNewTaskToList(newTask);
-        ProjectUIHandler.appendNewTaskToList(newTask);
         saveUserData();
+        return newTask;
     }
 
     // Updates a task's info after it's updated
@@ -64,16 +53,6 @@ const DataHandler = (function() {
         task.priority = form.get("edited-priority");
         task.notes = form.get("edited-notes");
         saveUserData();
-    }
-
-
-    async function editExistingTask() {
-        const editTaskForm = document.getElementById("edit-task-form");
-        const updatedTaskData = new FormData(editTaskForm);
-        const taskID = document.querySelector(".edit-task-dialog").id;
-        const taskToUpdate = findTaskByID(taskID);
-        updateTaskInfo(taskToUpdate, updatedTaskData);
-        ProjectUIHandler.editDisplayedTask(taskToUpdate);
     }
 
     // This deletes a task with the given ID from the project
@@ -86,13 +65,7 @@ const DataHandler = (function() {
         return projectList;
     }
 
-    function reconstructProjectList() {
-        for(let index = 0; index < projectList.length; index++) {
-            ProjectUIHandler.appendNewProjectToList(projectList[index].name, projectList[index].id);
-        }
-    }
-
-    return { returnProjectByID, addNewTaskToProject, findTaskByID, editExistingTask, deleteExistingTask, returnProjectList };
+    return { returnProjectByID, addNewTaskToProject, findTaskByID, updateTaskInfo, deleteExistingTask, returnProjectList, addNewProject };
 
 })();
 
